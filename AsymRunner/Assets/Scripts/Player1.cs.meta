@@ -1,0 +1,64 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Player1 : MonoBehaviour
+{
+    public static Player2 singleton;
+    public float speed;
+    public float maxSpeed;
+    public float jumpForce;
+    public ForceMode2D forcemode;
+    private Vector2 screenBounds;
+    void Awake()
+    {
+        if (singleton == null)
+        {
+            singleton = this;
+        }
+        else if (singleton != this)
+        {
+            enabled = false;
+        }
+    }
+
+    private Rigidbody2D rb;
+    // Start is called before the first frame update
+    void Start()
+    {
+        screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //this.transform.position = new Vector3(Time.time * speed, this.transform.position.y, 0);
+        if(GameManager.singleton.isStart == false)
+        {
+            if (transform.position.x >= -screenBounds.x)
+            {
+
+
+                if (Input.GetKeyDown("space"))
+                {
+                    Jump(jumpForce, forcemode);
+                }
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
+        }
+        
+        
+    }
+
+    void Jump(float jumpForce, ForceMode2D forceMode)
+    {
+        rb.AddForce(new Vector2(0, jumpForce), forceMode);
+    }
+    
+    
+
+}
